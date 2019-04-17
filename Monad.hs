@@ -9,8 +9,7 @@ module Monad where
         fmap f (Node el left right)=Node (f el) (fmap f left) (fmap f right)
         
     instance Applicative Tree where
-        pure _ Empty=Empty
-        pure Empty x=x
+        pure x=Leaf x
         <*> (Leaf t) Empty=Empty
         <*> (Node e f g) Leaf x=Leaf 
     
