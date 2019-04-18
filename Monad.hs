@@ -11,6 +11,8 @@ module Monad where
     instance Applicative Tree where
         pure x=Leaf x
         <*> (Leaf t) Empty=Empty
-        <*> (Node e f g) Leaf x=Leaf 
+        <*> (Node h ff fg) (Leaf x)=Node (h x) (ff <*> pure x) (fg <*> pure x)
+        <*> (Node h ff fg) (Node x fy fz)=Node (h x) (Node 
+        
     
     
