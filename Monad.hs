@@ -10,9 +10,15 @@ module Monad where
         
     instance Applicative Tree where
         pure x=Leaf x
-        <*> (Leaf t) Empty=Empty
-        <*> (Node h ff fg) (Leaf x)=Node (h x) (ff <*> pure x) (fg <*> pure x)
-        <*> (Node h ff fg) (Node x fy fz)=Node (h x) (Node 
-        
-    
-    
+        (<*>) _ Empty=Empty
+        (<*>) Empty _ =Empty
+        (<*>) (Leaf f) t=fmap f t
+        (<*>) (Node h ff fg) lf@(Leaf x)=Node (h x) (ff <*> lf) (fg <*> lf)
+        (<*>) (Node h ff fg) (Node x fy fz)=Node (h x) (Node  (h x) (ff<*>fy) (ff<*>fz)) (Node (h x) (fg<*>fy)(fg<*>fz))
+
+
+    instance Monoid Tree where
+        mempty=Empty
+        mappend a Empty=a
+        mappend a b=Node (identity) x y
+       
