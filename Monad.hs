@@ -16,9 +16,12 @@ module Monad where
         (<*>) (Node h ff fg) lf@(Leaf x)=Node (h x) (ff <*> lf) (fg <*> lf)
         (<*>) (Node h ff fg) (Node x fy fz)=Node (h x) (Node  (h x) (ff<*>fy) (ff<*>fz)) (Node (h x) (fg<*>fy)(fg<*>fz))
 
+    instance Monad Tree where
+        return=Leaf
+        (>>=) Empty _=Empty
+        (>>=) (Leaf x) f=f x
+        (>>=) (Node x my mz) f=Node (return x) (f my) (f mz)
+    
 
-    instance Monoid Tree where
-        mempty=Empty
-        mappend a Empty=a
-        mappend a b=Node (identity) x y
+
        
