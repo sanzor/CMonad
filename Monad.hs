@@ -20,8 +20,10 @@ module Monad where
         return=Leaf
         (>>=) Empty _=Empty
         (>>=) (Leaf x) f=f x
-        (>>=) (Node x my mz) f=Node (return x) (f my) (f mz)
+        (>>=) (Node x my mz) f=Node (unwrap $ f x) (my>>=f)(mz>>=f)
     
 
 
-       
+    unwrap::Tree a->a
+    unwrap (Leaf x)=x
+    unwrap _ =undefined
