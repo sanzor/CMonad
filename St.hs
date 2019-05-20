@@ -12,4 +12,7 @@ module St where
     make=State f
 
     instance Monad (State s) where
-        return x=State $ (\t->(x,t))
+        return a=State $ \s->(a,s)
+        (>>=) m g=State $ \s -> let (a,s')= runState m s in
+                                   runState (g a) s'
+                                
