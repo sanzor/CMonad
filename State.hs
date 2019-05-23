@@ -28,16 +28,21 @@ module State where
         return Env{envName=name,fileNames=names}
     
     
-    readEnv::State Env Env
-    readEnv=State $ \_ ->do
-        return value
+    get::State s s
+    get=State $ \s ->(s,s)
 
-   -- changeEnvName::String->State Env ()
+    put::State s ()
+    put =State $ \s ->((),s)
 
-   -- getEnvFileLengths::State Env [Int]
-   
+    modify::(s->s)->State s ()
+    modify f=get>>= \s -> put (f s)
 
-   https://www.reddit.com/r/haskellquestions/comments/7piqvg/get_and_put_from_the_state_monad_still_confuse_me/
+    evalState::State s a->s->a
+    evalState act=fst.run act 
+
+
+    execState::State s a->s->s
+    execState act=snd .run act 
 
 
     
