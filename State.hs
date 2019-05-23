@@ -1,5 +1,7 @@
 module State where 
-    import Control.Monad
+    import Control.Monad 
+    import System.Directory
+   
     newtype State s a = State {run::s->(a,s)} 
 
     instance Functor (State s) where
@@ -11,11 +13,32 @@ module State where
         return a= State $ \k->(a,k) 
         (>>=) m f=State $ \s -> let (a,s')=run m s in
             run (f a) s'
-        
-            
-    f::Int->(Int,IO String)
-    f x | x>3 = (x, (++) <$> getLine <*>getLine)
-        |otherwise =(x, (\y _->y)  <$>  getLine <*> writeFile "a.txt" (show x) )
+    
+    data Env=Env{
+        envName::String,
+        fileNames::[String]
+    }
+    instance Show Env where 
+        show Env{envName=x,fileNames=xs} = "{ envName:"++x++" , files: ["++foldr (\t y-> t++","++y) "" xs ++"] }"
+      
+    initEnv::IO Env
+    initEnv=do
+        name<- getLine
+        names<- getCurrentDirectory>>=listDirectory
+        return Env{envName=name,fileNames=names}
+    
+    readState::(State s) a->(s,s)
+    readState (m x)= snd $ run m x
+
+   
+
+
+
+
+    
+
+
+    
     
    
    
