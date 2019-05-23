@@ -29,14 +29,15 @@ module State where
     
     
     readEnv::State Env Env
-    readEnv=State $ \_ ->initEnv>>= \env-> (env,env)
+    readEnv=State $ \_ ->do
+        return value
 
    -- changeEnvName::String->State Env ()
 
    -- getEnvFileLengths::State Env [Int]
    
 
-    
+   https://www.reddit.com/r/haskellquestions/comments/7piqvg/get_and_put_from_the_state_monad_still_confuse_me/
 
 
     
