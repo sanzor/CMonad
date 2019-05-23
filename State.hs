@@ -28,15 +28,13 @@ module State where
         return Env{envName=name,fileNames=names}
     
     
-    get::State s s
-    get =State $ \s ->(s,s)
+    readEnv::State Env Env
+    readEnv=State $ \_ ->initEnv>>= \env-> (env,env)
 
-    put::s->State s ()
-    put s=State $ \_ -> ((),s)
+   -- changeEnvName::String->State Env ()
+
+   -- getEnvFileLengths::State Env [Int]
    
-
-
-
 
     
 
