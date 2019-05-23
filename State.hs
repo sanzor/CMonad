@@ -27,9 +27,12 @@ module State where
         names<- getCurrentDirectory>>=listDirectory
         return Env{envName=name,fileNames=names}
     
-    readState::(State s) a->(s,s)
-    readState (m x)= snd $ run m x
+    
+    get::State s s
+    get =State $ \s ->(s,s)
 
+    put::s->State s ()
+    put s=State $ \_ -> ((),s)
    
 
 
