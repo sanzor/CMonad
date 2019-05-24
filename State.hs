@@ -14,43 +14,22 @@ module State where
         (>>=) m f=State $ \s -> let (a,s')=run m s in
             run (f a) s'
     
-    data Env=Env{
-        envName::String,
-        fileNames::[String]
-    }
-    instance Show Env where 
-        show Env{envName=x,fileNames=xs} = "{ envName:"++x++" , files: ["++foldr (\t y-> t++","++y) "" xs ++"] }"
-      
-    initEnv::IO Env
-    initEnv=do
-        name<- getLine
-        names<- getCurrentDirectory>>=listDirectory
-        return Env{envName=name,fileNames=names}
-    
-    
-    get::State s s
-    get=State $ \s ->(s,s)
 
-    put::State s ()
-    put =State $ \s ->((),s)
+    get::State s s
+    get=State $ \s -> (s,s)
+
+    put :: s -> State s ()
+    put s = State $ \_ -> ((), s)
+    
 
     modify::(s->s)->State s ()
-    modify f=get>>= \s -> put (f s)
+    modify f = get>>= \s -> put (f s) 
 
-    evalState::State s a->s->a
-    evalState act=fst.run act 
+    evalState::State s a ->s->a
+    evalState act=fst . run act
 
+    execState::State s a ->s->s
+    execState act=snd . run act
 
-    execState::State s a->s->s
-    execState act=snd .run act 
-
-
-    
-    
-   
-   
-  
-     
-
- 
-   
+    -- changeName::String->State Env ()
+    -- changeName str= State $ \(Env _ f)-> ((),Env str f )
