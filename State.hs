@@ -17,11 +17,11 @@ module State where
 
     
     get::State s s
-    get=State $ \s ->(s,s)
+    get=State $ \s -> (s,s)
 
     put::s->State s ()
-    put x=State $ \s ->((),s)
+    put s=State $ \_-> ((),s)
 
     modify::(s->s)->State s ()
-    modify f=get>>=\s -> put (f s)
+    modify f=get>>=\s->put (f s)
    
