@@ -1,4 +1,4 @@
-module Stack where
+module Env where
     import State 
     import System.Directory
     data Env=Env{
@@ -14,27 +14,20 @@ module Stack where
         names<- getCurrentDirectory>>=listDirectory
         return Env{envName=name,fileNames=names}
     
+    changeName::String->State Env ()
+    changeName name=State $ \ Env (x:xs) ls -> ((),Env name ls)
+
+    toStats::State Env String
+    toStats= State $ \env ->( (show env)++",file count:"++show . length  $ fileNames env,env)
+
+    useEnv::State Env String
+    useEnv=do
+        liftM put initEnv
+        liftM changeName getLine
+        toStats
+
+        
+
+
     
-    
-   
-
-    type Stack=[Int]
-
-    pop::State Stack Int
-    pop= State $ \(x:xs)->(x,xs)
-
-    push::Int->State Stack ()
-    push i =State $ \xs ->((),i:xs)
-
-    
-    stackManip::State Stack Int
-    stackManip=do
-        push 3
-        pop
-        pop
-       
-    chName::String->State Env ()
-    chName str=State $ \(Env name names) -> ((),Env str names) 
-
-  
 
