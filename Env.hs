@@ -1,6 +1,7 @@
 module Env where
     import State 
     import System.Directory
+    import Control.Monad
     data Env=Env{
         envName::String,
         fileNames::[String]
@@ -15,16 +16,23 @@ module Env where
         return Env{envName=name,fileNames=names}
     
     changeName::String->State Env ()
-    changeName name=State $ \ Env (x:xs) ls -> ((),Env name ls)
+    changeName (y:ys)=State $ \ (Env (x:xs) ls) -> ((),Env (y:xs) ls)
 
     toStats::State Env String
-    toStats= State $ \env ->( (show env)++",file count:"++show . length  $ fileNames env,env)
-
-    useEnv::State Env String
+    toStats= State $ \env -> (show env,env)
+    
+    useEnv::IO ()
     useEnv=do
-        liftM put initEnv
-        liftM changeName getLine
-        toStats
+        e<-initEnv
+        name<-getLine
+        let st=do
+            changeName name
+            toStats
+        let str=evalState st e
+        putStrLn str
+
+   
+
 
         
 
